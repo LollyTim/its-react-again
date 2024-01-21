@@ -4,36 +4,39 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useState } from "react";
 import SearchItem from "./SearchItem";
+import { useEffect } from "react";
 function App() {
   const [items, setItems] = useState(
-    JSON.parse(localStorage.getItem("shoppinglist"))
+    JSON.parse(localStorage.getItem("shoppinglist")) || []
   );
 
-  const [search, srtSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [newItem, setNewItem] = useState("");
 
-  const setAndSaveItems = (newItems) => {
-    setItems(newItems);
-    localStorage.setItem("shoppinglist", JSON.stringify(newItems));
-  };
+  useEffect(() => {
+    localStorage.setItem("shoppinglist", JSON.stringify(items));
+  }, [items]);
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
+  const handleSearch = (item) => {
+    if (search) return item;
+  };
   const handleCheck = (id) => {
     const listItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
     );
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
   const handleDelete = (id) => {
     const listItems = items.filter((item) => item.id !== id);
-    setAndSaveItems(listItems);
+    setItems(listItems);
   };
 
   const handleSubmit = (e) => {
@@ -46,7 +49,11 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <SearchItem />
+      <SearchItem
+        handleSearch={handleSearch}
+        setSearch={setSearch}
+        search={search}
+      />
       <AddItem
         handleSubmit={handleSubmit}
         setNewItem={setNewItem}
@@ -54,7 +61,9 @@ function App() {
       />
 
       <Content
-        items={items}
+        items={items.filter((item) =>
+          item.item.toLowerCase().includes(search.toLocaleLowerCase())
+        )}
         handleCheck={handleCheck}
         handleDelete={handleDelete}
       />
