@@ -13,9 +13,9 @@ function App() {
   const [search, setSearch] = useState("");
   const [newItem, setNewItem] = useState("");
 
-  useEffect(() => {
-    localStorage.setItem("shoppinglist", JSON.stringify(items));
-  }, [items]);
+  // useEffect(() => {
+  //   localStorage.setItem("shoppinglist", JSON.stringify(items));
+  // }, [items]);
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
