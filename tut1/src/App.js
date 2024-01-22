@@ -78,10 +78,18 @@ function App() {
     if (result) setfetchError(result);
   };
 
-  const handleDelete = (id) => {
-    const listItems = items.filter((item) => item.id !== id);
-    setItems(listItems);
-  };
+  // const handleDelete = (id) => {
+  //   const listItems = items.filter((item) => item.id !== id);
+  //   setItems(listItems);
+
+  //   const deleteOptions = {
+  //     method: "DELETE",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify({})
+  //   }
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
