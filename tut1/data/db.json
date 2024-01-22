@@ -1,9 +1,8 @@
 {
   "items": [
     {
-      "id": "1",
-      "checked": false,
-      "item": "almond unsalyed are in the  list I listed in the list"
+      "checked": true,
+      "id": "1"
     },
     {
       "id": "2",
