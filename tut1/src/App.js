@@ -91,12 +91,12 @@ function App() {
     };
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!newItem) return;
-    addItem(newItem);
-    setNewItem("");
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (!newItem) return;
+  //   addItem(newItem);
+  //   setNewItem("");
+  // };
 
   return (
     <div className="App">
