@@ -5,17 +5,37 @@ import Header from "./Header";
 import { useState } from "react";
 import SearchItem from "./SearchItem";
 import { useEffect } from "react";
+
 function App() {
-  const [items, setItems] = useState(
-    JSON.parse(localStorage.getItem("shoppinglist")) || []
-  );
+  //  run this on the command to create the api ---- npx json-serer -p 3500 -w data/db.json
+  const API_URL = "http://localhost:3500/items";
+
+  const [items, setItems] = useState([]);
 
   const [search, setSearch] = useState("");
   const [newItem, setNewItem] = useState("");
+  const [fetchError, setfetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem("shoppinglist", JSON.stringify(items));
-  }, [items]);
+    const fetchItems = async () => {
+      try {
+        const responce = await fetch(API_URL);
+        if (!responce.ok) throw Error("Did not fetch data expected");
+        const listItems = await responce.json();
+        console.log(listItems);
+        setItems(listItems);
+        setfetchError(null);
+      } catch (err) {
+        setfetchError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    setTimeout(() => {
+      fetchItems();
+    }, 2000);
+  }, []);
 
   const addItem = (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
@@ -59,14 +79,19 @@ function App() {
         setNewItem={setNewItem}
         newItem={newItem}
       />
-
-      <Content
-        items={items.filter((item) =>
-          item.item.toLowerCase().includes(search.toLocaleLowerCase())
+      <main>
+        {isLoading && <p>Loading Items</p>}
+        {fetchError && <p style={{ color: "red" }}>{`Error: ${fetchError}`}</p>}
+        {!fetchError && !isLoading && (
+          <Content
+            items={items.filter((item) =>
+              item.item.toLowerCase().includes(search.toLocaleLowerCase())
+            )}
+            handleCheck={handleCheck}
+            handleDelete={handleDelete}
+          />
         )}
-        handleCheck={handleCheck}
-        handleDelete={handleDelete}
-      />
+      </main>
       <Footer length={items.length} />
     </div>
   );
