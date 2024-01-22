@@ -20,7 +20,7 @@ const AddItem = ({ newItem, setNewItem, handleSubmit }) => {
           placeholder="Add Item"
           autoFocus
         />
-        <button type="button" onClick={() => inputRef.current.focus()} aria-label="Add item">
+        <button type="submit" onClick={() => inputRef.current.focus()} aria-label="Add item">
           <FaPlus />
         </button>
       </form>

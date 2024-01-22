@@ -1,4 +1,4 @@
-const apiRequest = async (url = "", optionsObj = null, reeMsg = null) => {
+const apiRequest = async (url = "", optionsObj = null, errMsg = null) => {
   try {
     const response = await fetch(url, optionsObj);
     if (!response.ok) {

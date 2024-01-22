@@ -5,6 +5,7 @@ import Header from "./Header";
 import { useState } from "react";
 import SearchItem from "./SearchItem";
 import { useEffect } from "react";
+import apiRequest from "./apiRequest";
 
 function App() {
   //  run this on the command to create the api ---- npx json-serer -p 3500 -w data/db.json
@@ -37,11 +38,22 @@ function App() {
     }, 2000);
   }, []);
 
-  const addItem = (item) => {
+  const addItem = async (item) => {
     const id = items.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
     setItems(listItems);
+
+    const postOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(myNewItem),
+    };
+
+    const result = await apiRequest(API_URL, postOptions);
+    if (result) setfetchError(result);
   };
 
   const handleSearch = (item) => {
