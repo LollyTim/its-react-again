@@ -1,12 +1,13 @@
 import React from 'react'
 
-const Button = () => {
+const Button = ({buttonText, reqType, setReqType}) => {
   return (
-    <div>
-        <button>Get </button>
-        <button>Post </button>
-        <button>Comment</button>
-    </div>
+        <button className={buttonText === reqType ? "selected" : null}
+            onClick={() => setReqType(buttonText)}
+            type='button'>
+                {buttonText}
+        </button>
+   
   )
 }
 

@@ -4,7 +4,7 @@ import Form from "./Form";
 function App() {
   const API_URL = "https:jsonplaceholder.typicode.com";
   const [reqType, setReqType] = useState("users");
-  const [items, setItems] = useEffect([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
