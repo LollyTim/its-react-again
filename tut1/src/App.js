@@ -1,41 +1,36 @@
+import Header from "./Header";
+import SearchItem from "./SearchItem";
 import AddItem from "./AddItem";
 import Content from "./Content";
 import Footer from "./Footer";
-import Header from "./Header";
-import { useState } from "react";
-import SearchItem from "./SearchItem";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import apiRequest from "./apiRequest";
 
 function App() {
-  //  run this on the command to create the api ---- npx json-serer -p 3500 -w data/db.json
   const API_URL = "http://localhost:3500/items";
 
   const [items, setItems] = useState([]);
-
-  const [search, setSearch] = useState("");
   const [newItem, setNewItem] = useState("");
-  const [fetchError, setfetchError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const responce = await fetch(API_URL);
-        if (!responce.ok) throw Error("Did not fetch data expected");
-        const listItems = await responce.json();
-        console.log(listItems);
+        const response = await fetch(API_URL);
+        if (!response.ok) throw Error("Did not receive expected data");
+        const listItems = await response.json();
         setItems(listItems);
-        setfetchError(null);
+        setFetchError(null);
       } catch (err) {
-        setfetchError(err.message);
+        setFetchError(err.message);
       } finally {
         setIsLoading(false);
       }
     };
-    setTimeout(() => {
-      fetchItems();
-    }, 2000);
+
+    setTimeout(() => fetchItems(), 2000);
   }, []);
 
   const addItem = async (item) => {
@@ -51,14 +46,10 @@ function App() {
       },
       body: JSON.stringify(myNewItem),
     };
-
     const result = await apiRequest(API_URL, postOptions);
-    if (result) setfetchError(result);
+    if (result) setFetchError(result);
   };
 
-  const handleSearch = (item) => {
-    if (search) return item;
-  };
   const handleCheck = async (id) => {
     const listItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
@@ -67,7 +58,7 @@ function App() {
 
     const myItem = listItems.filter((item) => item.id === id);
     const updateOptions = {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -75,20 +66,17 @@ function App() {
     };
     const reqUrl = `${API_URL}/${id}`;
     const result = await apiRequest(reqUrl, updateOptions);
-    if (result) setfetchError(result);
+    if (result) setFetchError(result);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const listItems = items.filter((item) => item.id !== id);
     setItems(listItems);
 
-    const deleteOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    };
+    const deleteOptions = { method: "DELETE" };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+    if (result) setFetchError(result);
   };
 
   const handleSubmit = (e) => {
@@ -100,24 +88,22 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <SearchItem
-        handleSearch={handleSearch}
-        setSearch={setSearch}
-        search={search}
-      />
+      <Header title="Grocery List" />
       <AddItem
-        handleSubmit={handleSubmit}
-        setNewItem={setNewItem}
         newItem={newItem}
+        setNewItem={setNewItem}
+        handleSubmit={handleSubmit}
       />
+      <SearchItem search={search} setSearch={setSearch} />
       <main>
-        {isLoading && <p>Loading Items</p>}
+        {isLoading && <p>Loading Items...</p>}
         {fetchError && <p style={{ color: "red" }}>{`Error: ${fetchError}`}</p>}
         {!fetchError && !isLoading && (
           <Content
-            items={items.filter((item) =>
-              item.item.toLowerCase().includes(search.toLocaleLowerCase())
+            items={items.filter(
+              (item) =>
+                item.item &&
+                item.item.toLowerCase().includes(search.toLowerCase())
             )}
             handleCheck={handleCheck}
             handleDelete={handleDelete}
