@@ -10,7 +10,7 @@ const Form = ({ reqType, setReqType }) => {
         setReqType={setReqType} 
         />
       <Button 
-        buttonText="post" 
+        buttonText="posts" 
         reqType={reqType} 
         setReqType={setReqType} 
         />
