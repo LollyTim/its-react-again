@@ -40,7 +40,7 @@ function App() {
   ]);
 
   const [searchResult, setSearchResult] = useState([]);
-  const handleDelete = () => {};
+  const handleDelete = (id) => {};
 
   return (
     <div className="App">
