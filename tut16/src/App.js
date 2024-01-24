@@ -40,6 +40,7 @@ function App() {
   ]);
 
   const [searchResult, setSearchResult] = useState([]);
+  const handleDelete = () => {};
 
   return (
     <div className="App">
@@ -48,7 +49,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home posts={posts} setPosts={setPosts} />} />
         <Route path="/posts" element={<ANewPost />} />
-        <Route path="/posts/:id" element={<PostPage />} />
+        <Route
+          path="/posts/:id"
+          element={<PostPage posts={posts} handleDelete={handleDelete} />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Missing />} />
       </Routes>
