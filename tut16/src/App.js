@@ -6,7 +6,7 @@ import Home from "./Home";
 import PostPage from "./PostPage";
 import About from "./About";
 import Missing from "./Missing";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ANewPost from "./ANewPost";
 
@@ -40,7 +40,17 @@ function App() {
   ]);
 
   const [searchResult, setSearchResult] = useState([]);
-  const handleDelete = (id) => {};
+  const [postTitle, setPostTitle] = useState("");
+  const [postBody, setPostBody] = useState("");
+
+  const handleSubmit = () => {};
+
+  const navigate = useNavigate();
+  const handleDelete = (id) => {
+    const postsList = posts.filter((post) => post.id !== id);
+    setPosts(postsList);
+    navigate("/");
+  };
 
   return (
     <div className="App">
@@ -48,7 +58,18 @@ function App() {
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         <Route path="/" element={<Home posts={posts} setPosts={setPosts} />} />
-        <Route path="/posts" element={<ANewPost />} />
+        <Route
+          path="/posts"
+          element={
+            <ANewPost
+              handleSubmit={handleSubmit}
+              postTitle={postTitle}
+              setPostTitle={setPostTitle}
+              setPostBody={setPostBody}
+              postBody={postBody}
+            />
+          }
+        />
         <Route
           path="/posts/:id"
           element={<PostPage posts={posts} handleDelete={handleDelete} />}
