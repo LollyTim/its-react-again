@@ -3,6 +3,7 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import Home from "./Home";
 // import NewPost from "./NewPost";
+import API from "./api/posts";
 import PostPage from "./PostPage";
 import About from "./About";
 import Missing from "./Missing";
@@ -13,12 +14,24 @@ import ANewPost from "./ANewPost";
 
 function App() {
   const [posts, setPosts] = useState([]);
-
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const responce = await API.get("/posts");
+        setPosts(responce.data);
+      } catch (err) {
+        console.log(`Error: ${err.message}`);
+      }
+    };
+
+    fetchPost();
+  }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -29,22 +42,32 @@ function App() {
     setSearchResults(filteredResults.reverse());
   }, [posts, search]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
     const datetime = format(new Date(), "MMMM dd, yyyy pp");
     const newPost = { id, title: postTitle, datetime, body: postBody };
-    const allPosts = [...posts, newPost];
-    setPosts(allPosts);
-    setPostTitle("");
-    setPostBody("");
-    navigate("/");
+    try {
+      const responce = await API.post("/posts", newPost);
+      const allPosts = [...posts, responce.data];
+      setPosts(allPosts);
+      setPostTitle("");
+      setPostBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
   };
 
-  const handleDelete = (id) => {
-    const postsList = posts.filter((post) => post.id !== id);
-    setPosts(postsList);
-    navigate("/");
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/posts/${id}`);
+      const postsList = posts.filter((post) => post.id !== id);
+      setPosts(postsList);
+      history.push("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
   };
 
   return (
