@@ -61,10 +61,10 @@ function App() {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/posts/${id}`);
+      await API.delete(`/posts/${id}`);
       const postsList = posts.filter((post) => post.id !== id);
       setPosts(postsList);
-      history.push("/");
+      navigate("/");
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
