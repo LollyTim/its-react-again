@@ -17,6 +17,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   background-color: #efefef;
+}
+
+#root {
+  flex-grow: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
