@@ -11,6 +11,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ANewPost from "./ANewPost";
+import EditPost from "./EditPost";
+import useWindowSize from "./hooks/useWindowSize";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -21,6 +23,7 @@ function App() {
   const [editTitle, setEditTitle] = useState("");
   const [editBody, setEditBody] = useState("");
   const navigate = useNavigate();
+  const { width } = useWindowSize();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -90,12 +93,11 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={"MLO-JS Blog"} />
+      <Header title={"lollyJs"} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         <Route exact path="/" element={<Home posts={searchResults} />} />
         <Route
-          exact
           path="/posts"
           element={
             <ANewPost
@@ -107,6 +109,20 @@ function App() {
             />
           }
         />
+        <Route
+          path="/edit"
+          element={
+            <EditPost
+              posts={posts}
+              handleEdit={handleEdit}
+              editTitle={editTitle}
+              setEditTitle={setEditTitle}
+              editBody={editBody}
+              setEditBody={setEditBody}
+            />
+          }
+        />
+
         <Route
           path="/posts/:id"
           element={<PostPage posts={posts} handleDelete={handleDelete} />}
