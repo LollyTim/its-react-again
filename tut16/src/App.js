@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import ANewPost from "./ANewPost";
 import EditPost from "./EditPost";
 import useWindowSize from "./hooks/useWindowSize";
+import useAxiosFetch from "./hooks/useAxiosFetch";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -25,18 +26,25 @@ function App() {
   const navigate = useNavigate();
   const { width } = useWindowSize();
 
+  const { data, fetchError, isLoading } = useAxiosFetch(
+    "http://localhost:3500/posts"
+  );
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const responce = await API.get("/posts");
-        setPosts(responce.data);
-      } catch (err) {
-        console.log(`Error: ${err.message}`);
-      }
-    };
+    setPosts(data);
+  }, [data]);
 
-    fetchPost();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     try {
+  //       const responce = await API.get("/posts");
+  //       setPosts(responce.data);
+  //     } catch (err) {
+  //       console.log(`Error: ${err.message}`);
+  //     }
+  //   };
+
+  //   fetchPost();
+  // }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -93,7 +101,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={"lollyJs"} />
+      <Header title={"lollyJs"} width={width} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
         <Route exact path="/" element={<Home posts={searchResults} />} />
