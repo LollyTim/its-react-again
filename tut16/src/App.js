@@ -18,6 +18,8 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +55,22 @@ function App() {
       setPosts(allPosts);
       setPostTitle("");
       setPostBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`Error: ${err.message}`);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+    const updatePost = { id, title: editBody, datetime, body: editBody };
+    try {
+      const responce = await API.put(`/posts/${id}`, updatePost);
+      setPosts(
+        posts.map((post) => (post.id === id ? { ...responce.data } : post))
+      );
+      setEditTitle("");
+      setEditBody("");
       navigate("/");
     } catch (err) {
       console.log(`Error: ${err.message}`);
