@@ -104,7 +104,17 @@ function App() {
       <Header title={"lollyJs"} width={width} />
       <Nav search={search} setSearch={setSearch} />
       <Routes>
-        <Route exact path="/" element={<Home posts={searchResults} />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <Home
+              fetchError={fetchError}
+              isLoading={isLoading}
+              posts={searchResults}
+            />
+          }
+        />
         <Route
           path="/posts"
           element={
