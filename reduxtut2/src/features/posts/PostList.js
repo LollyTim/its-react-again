@@ -12,7 +12,7 @@ const PostsLists = () => {
       <h3>{post.title}</h3>
       <p>{post.content.substring(0, 100)}</p>
       <p className="postCredit">
-        <PostAuthot userid={post.userid} />
+        by <PostAuthot userid={post.userid} />
       </p>
     </article>
   ));

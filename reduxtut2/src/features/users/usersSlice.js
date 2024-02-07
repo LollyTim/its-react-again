@@ -10,8 +10,12 @@ const initialState = [
     name: "james killet",
   },
   {
-    id: "2",
-    name: "MLO fighter",
+    id: "3",
+    name: "MLO Manny",
+  },
+  {
+    id: "4",
+    name: "LOllyTech",
   },
 ];
 
