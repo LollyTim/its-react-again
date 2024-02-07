@@ -1,26 +1,37 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { nanoid } from "@reduxjs/toolkit";
 import { postAdded } from "./postsSlice";
+import { selectAllUsers } from "../users/usersSlice";
 
 const AddPostForm = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userid, setUserid] = useState("");
   const [show, setShow] = useState(false);
+
+  const users = useSelector(selectAllUsers);
 
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
+  const onAuthorChanged = (e) => setUserid(e.target.value);
 
   const onSavePostClick = () => {
     if (title && content) {
-      dispatch(postAdded(title, content));
+      dispatch(postAdded(title, content, userid));
       setContent("");
       setTitle("");
       setShow(true);
     }
   };
+
+  const userOptions = users.map((user) => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ));
   return (
     <section>
       <h2>Add a new post </h2>
@@ -33,6 +44,17 @@ const AddPostForm = () => {
           value={title}
           onChange={onTitleChanged}
         />
+
+        <label htmlFor="postAuthor">Post Title:</label>
+        <select
+          name="postAuthor"
+          id="postAuthor"
+          value={userid}
+          onChange={onAuthorChanged}
+        >
+          <option value=""></option>
+          {userOptions}
+        </select>
         <label htmlFor="postContent">Post Title:</label>
         <textarea
           name="postContent"
