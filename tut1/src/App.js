@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import apiRequest from "./apiRequest";
 
 function App() {
+  // run this ----> "npm json-server -p 3500 -w data/de.json to create the api
   const API_URL = "http://localhost:3500/items";
 
   const [items, setItems] = useState([]);
@@ -49,7 +50,6 @@ function App() {
     const result = await apiRequest(API_URL, postOptions);
     if (result) setFetchError(result);
   };
-
   const handleCheck = async (id) => {
     const listItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item

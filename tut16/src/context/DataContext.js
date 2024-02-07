@@ -1,21 +1,14 @@
-import Header from "./Header";
-import Nav from "./Nav";
-import Footer from "./Footer";
-import Home from "./Home";
-import PostPage from "./PostPage";
-import EditPost from "./EditPost";
-import About from "./About";
-import ANewPost from "./ANewPost";
-import Missing from "./Missing";
+import { useState, useEffect, createContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import API from "./api/posts";
-import useWindowSize from "./hooks/useWindowSize";
-import useAxiosFetch from "./hooks/useAxiosFetch";
-import { DataProvider } from "./context/DataContext";
+import API from "../api/posts";
+import useWindowSize from "../hooks/useWindowSize";
+import useAxiosFetch from "../hooks/useAxiosFetch";
 
-function App() {
+export const DataContext = createContext({});
+
+export const DataProvider = ({ childern }) => {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -32,19 +25,6 @@ function App() {
   useEffect(() => {
     setPosts(data);
   }, [data]);
-
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const responce = await API.get("/posts");
-  //       setPosts(responce.data);
-  //     } catch (err) {
-  //       console.log(`Error: ${err.message}`);
-  //     }
-  //   };
-
-  //   fetchPost();
-  // }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -100,59 +80,19 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {/* <DataProvider> */}
-      <Header title={"lollyJs"} width={width} />
-      <Nav search={search} setSearch={setSearch} />
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            <Home
-              fetchError={fetchError}
-              isLoading={isLoading}
-              posts={searchResults}
-            />
-          }
-        />
-        <Route
-          path="/posts"
-          element={
-            <ANewPost
-              handleSubmit={handleSubmit}
-              postTitle={postTitle}
-              setPostTitle={setPostTitle}
-              postBody={postBody}
-              setPostBody={setPostBody}
-            />
-          }
-        />
-        <Route
-          path="/edit"
-          element={
-            <EditPost
-              posts={posts}
-              handleEdit={handleEdit}
-              editTitle={editTitle}
-              setEditTitle={setEditTitle}
-              editBody={editBody}
-              setEditBody={setEditBody}
-            />
-          }
-        />
-
-        <Route
-          path="/posts/:id"
-          element={<PostPage posts={posts} handleDelete={handleDelete} />}
-        />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<Missing />} />
-      </Routes>
-      <Footer />
-      {/* </DataProvider> */}
-    </div>
+    <DataContext.Provider
+      value={{
+        width,
+        search,
+        setSearch,
+        searchResults,
+        fetchError,
+        isLoading
+      }}
+    >
+      {childern}
+    </DataContext.Provider>
   );
-}
+};
 
-export default App;
+// export default DataProvider;
