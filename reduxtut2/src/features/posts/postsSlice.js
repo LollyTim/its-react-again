@@ -6,15 +6,29 @@ const initialState = [
   {
     id: "1",
     title: "Doing hard things",
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
     content:
       "Doing hard things in the place of consistency be consistence in what you do",
-    date: sub(new Date(), { minutes: 10 }).toISOSring(),
+    reactions: {
+      thumbsUp: 0,
+      wow: 0,
+      heart: 0,
+      rocket: 0,
+      coffee: 0,
+    },
   },
   {
     id: "2",
     title: "Pray Continually",
+    date: sub(new Date(), { minutes: 5 }).toISOString(),
     content: "Dont stop praying if you stop raying you will fall a pray",
-    date: sub(new Date(), { minutes: 10 }).toISOSring(),
+    reactions: {
+      thumbsUp: 0,
+      wow: 0,
+      heart: 0,
+      rocket: 0,
+      coffee: 0,
+    },
   },
 ];
 
@@ -26,21 +40,35 @@ const postsSlice = createSlice({
       reducer(state, action) {
         state.push(action.payload);
       },
-      prepare(title, content, userid, date) {
+      prepare(title, content, userid) {
         return {
           payload: {
             id: nanoid(),
             title,
             content,
-            date,
+            date: new Date().toISOString(),
             userid,
+            reactions: {
+              thumbsUp: 0,
+              wow: 0,
+              heart: 0,
+              rocket: 0,
+              coffee: 0,
+            },
           },
         };
       },
+    },
+    reactionAdded(state, action) {
+      const { postId, reaction } = action.payload;
+      const existingPost = state.find((post) => post.id === postId);
+      if (existingPost) {
+        existingPost.reactions[reaction]++;
+      }
     },
   },
 });
 
 export const selectAllposts = (state) => state.posts;
-export const { postAdded } = postsSlice.actions;
+export const { postAdded, reactionAdded } = postsSlice.actions;
 export default postsSlice.reducer;
